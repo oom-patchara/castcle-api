@@ -21,16 +21,28 @@
  * or have any questions.
  */
 
-import { Controller, Get } from '@nestjs/common';
-
+import { Controller, Get, Req } from '@nestjs/common';
+import { Request } from 'express';
 import { AppService } from './app.service';
 
-@Controller()
+@Controller('metadata')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getData() {
-    return this.appService.getData();
+  @Get('hashtags')
+  getHashtags(@Req() request: Request) {
+
+    
+    // INFO: As for this demo we don't implement protected route and JWT strategy guards
+    // so this is just get bearer token from the request
+    const jwt = request.headers.authorization;
+    console.log('JWT token:', jwt);
+
+    // pass accept-language to getHashtags method 
+    const locale = request.headers['accept-language'] ? request.headers['accept-language'] : null;
+    // pass accept-version to getHashtags method if exist, otherwise set default version=1.0
+    const ver = request.headers['accept-version'] ? request.headers['accept-version'] : '1.0';
+
+    return this.appService.getHashtags(locale, ver);
   }
 }

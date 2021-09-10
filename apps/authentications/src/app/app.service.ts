@@ -25,6 +25,10 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
+  authUser(): { message: string } {
+    return { message: 'Welcome to authentications!' };
+  }
+
   getData(): { message: string } {
     return { message: 'Welcome to authentications!' };
   }

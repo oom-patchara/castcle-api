@@ -21,11 +21,38 @@
  * or have any questions.
  */
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
+import { HASHTAGS } from './hashtags.mock';
 
 @Injectable()
 export class AppService {
-  getData(): { message: string } {
-    return { message: 'Welcome to metadata!' };
+  private hashtags = HASHTAGS;
+
+  public getHashtags(locale, ver) {
+
+    // Support locale
+    const supportLocale = ['en', 'th'];
+
+    if (ver !== '1.0') {
+      throw new HttpException('Header not valid: Accept-Version', 400);
+    }
+    if (!supportLocale.includes(locale)) {
+      throw new HttpException('Header not valid: Accept-Language', 400);
+    }
+
+
+
+    // INFO: Do database query here but for this demo
+    // Just filter hastags from mock data instead
+    const items = [];
+    this.hashtags.forEach(item => {
+      if (item.lang === locale) {
+        const hashtag = Object.assign({}, item);
+        delete hashtag.lang;
+        items.push(hashtag);
+      }
+    });
+
+    return { message: 'Get hashtags success', payload: items };
   }
 }

@@ -21,15 +21,22 @@
  * or have any questions.
  */
 
-import { Controller, Get } from '@nestjs/common';
-
+import { Controller, Get, Post, Req } from '@nestjs/common';
+import { Request } from 'express';
 import { AppService } from './app.service';
 
-@Controller()
+@Controller('auth')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
+  @Post('user')
+  authUser(@Req() request: Request) {
+
+    console.log('body', request.body);
+    return this.appService.authUser();
+  }
+
+  @Get('token')
   getData() {
     return this.appService.getData();
   }
